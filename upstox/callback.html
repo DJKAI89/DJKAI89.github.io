@@ -12,7 +12,7 @@
 
         if (code) {
             // Send code to local C# server
-            fetch(`http://localhost:5000/receive_code/?code=${code}`)
+            fetch(`http://localhost:5000/callbackCode/?code=${code}`)
                 .then(() => {
                     document.body.innerHTML = "<h2>Code sent to local app! You can close this page.</h2>";
                 })
