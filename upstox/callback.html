@@ -1,28 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-    <title>Upstox Callback</title>
+  <meta charset="utf-8" />
+  <title>Auth callback</title>
 </head>
 <body>
-    <h2>Processing OAuth...</h2>
-    <script>
-        // Get code from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
+  <h2>Processing authorization...</h2>
+  <script>
+    // Extract `code` (or error) from query string and forward to app scheme.
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const error = params.get('error');
 
-        if (code) {
-            // Send code to local C# server
-            fetch(`http://localhost:5000/callbackCode/?code=${code}`)
-                .then(() => {
-                    document.body.innerHTML = "<h2>Code sent to local app! You can close this page.</h2>";
-                })
-                .catch(err => {
-                    document.body.innerHTML = "<h2>Failed to send code. Make sure your local app is running.</h2>";
-                    console.error(err);
-                });
-        } else {
-            document.body.innerHTML = "<h2>No code found in URL.</h2>";
-        }
-    </script>
+    if (code) {
+      // Redirect to your app's custom scheme. Add any other params if required.
+      window.location.href = `myapp://callback?code=${encodeURIComponent(code)}`;
+    } else {
+      // Show error or redirect to an error page
+      document.body.innerHTML = '<h3>Authorization failed</h3><pre>' + (error || 'no code') + '</pre>';
+    }
+  </script>
 </body>
 </html>
