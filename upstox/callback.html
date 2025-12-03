@@ -1,23 +1,18 @@
 <!doctype html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <title>Auth callback</title>
-</head>
+<head><meta charset="utf-8" /></head>
 <body>
   <h2>Processing authorization...</h2>
   <script>
-    // Extract `code` (or error) from query string and forward to app scheme.
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    const error = params.get('error');
-
+    const p = new URLSearchParams(location.search);
+    const code = p.get('code');
     if (code) {
-      // Redirect to your app's custom scheme. Add any other params if required.
-      window.location.href = `myapp://callback?code=${encodeURIComponent(code)}`;
+      // Try automatic redirect
+      location.href = `myapp://callback?code=${encodeURIComponent(code)}`;
+      // Fallback clickable link if automatic redirect is blocked
+      document.body.innerHTML = `<p>If your app didn't open automatically, <a href="myapp://callback?code=${encodeURIComponent(code)}">click here</a></p>`;
     } else {
-      // Show error or redirect to an error page
-      document.body.innerHTML = '<h3>Authorization failed</h3><pre>' + (error || 'no code') + '</pre>';
+      document.body.innerText = 'No code found in query.';
     }
   </script>
 </body>
